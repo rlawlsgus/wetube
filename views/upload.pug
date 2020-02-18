@@ -1,4 +1,11 @@
 extends layouts/main
 
 block content
-    p Upload
+    .for-container
+        form(action=routes.upload, method="post")
+            label(for="Video") Video File
+            input(type="file", id="video", name="video")
+            input(type="text", placeholder="Title", name="title")
+            input(type="text", placeholder="Description", name="description")
+            input(type="file", value="Upload Video")
+        a.form-container__link(href=`.${routes.deleteVideo}`) Delete Video
