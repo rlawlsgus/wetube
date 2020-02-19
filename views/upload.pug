@@ -2,10 +2,10 @@ extends layouts/main
 
 block content
     .for-container
-        form(action=routes.upload, method="post")
+        form(action=`/videos${routes.upload}`, method="post")
             label(for="Video") Video File
-            input(type="file", id="video", name="video")
-            input(type="text", placeholder="Title", name="title")
-            input(type="text", placeholder="Description", name="description")
+            input(type="file", id="file", name="file", required=true)
+            input(type="text", placeholder="Title", name="title", required=true)
+            textarea(placeholder="Description", required=true)
             input(type="file", value="Upload Video")
         a.form-container__link(href=`.${routes.deleteVideo}`) Delete Video
