@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 // eslint-disable-next-line import/no-cycle
 import routes from "../routes";
 import Video from "../models/Video";
@@ -36,9 +37,11 @@ export const postUpload = async (req, res) => {
   const newVideo = await Video.create({
     fileUrl: path,
     title,
-    description
+    description,
+    creator: req.user.id
   });
-  // To Do: Upload and save video
+  req.user.videos.push(newVideo.id);
+  req.user.save();
   res.redirect(routes.videoDetail(newVideo.id));
 };
 
@@ -47,7 +50,7 @@ export const videoDetail = async (req, res) => {
     params: { id }
   } = req;
   try {
-    const video = await Video.findById(id);
+    const video = await Video.findById(id).populate("creator");
     res.render("videoDetail", { pageTitle: video.title, video });
   } catch (error) {
     res.redirect(routes.home);
@@ -60,7 +63,12 @@ export const getEditVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    const userId = req.user._id;
+    if (String(video.creator) !== String(userId)) {
+      throw Error();
+    } else {
+      res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    }
   } catch (error) {
     res.redirect(routes.home);
   }
@@ -83,7 +91,13 @@ export const deleteVideo = async (req, res) => {
     params: { id }
   } = req;
   try {
-    await Video.findOneAndRemove({ _id: id });
+    const video = await Video.findById(id);
+    const userId = req.user._id;
+    if (String(video.creator) !== String(userId)) {
+      throw Error();
+    } else {
+      await Video.findOneAndRemove({ _id: id });
+    }
   } catch (error) {
     console.log(error);
   }
