@@ -452,6 +452,7 @@ input[type="submit"] {
   .user-profile .user-profile__btns {
     display: flex;
     flex-direction: column;
-    align-items: center; }
+    align-items: center;
+    margin-bottom: 20px; }
     .user-profile .user-profile__btns a:not(:last-child) {
       margin-bottom: 20px; }

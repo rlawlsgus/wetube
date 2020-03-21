@@ -3,6 +3,7 @@
 import routes from "../routes";
 import Video from "../models/Video";
 import Comment from "../models/Comment";
+import User from "../models/User";
 
 export const home = async (req, res) => {
   try {
@@ -94,17 +95,24 @@ export const deleteVideo = async (req, res) => {
     params: { id }
   } = req;
   try {
-    const video = await Video.findById(id);
+    const video = await Video.findById(id).populate("comments");
+    const comments = await Comment.findOne({ videos: id });
     const userId = req.user._id;
+    // const user = await User.findById(userId).populate("videos");
     if (String(video.creator) !== String(userId)) {
       throw Error();
     } else {
       await Video.findOneAndRemove({ _id: id });
+      // remove all the comments
+      await Comment.findByIdAndRemove(comments.id);
+      // remove video field data of User
+      // await user.videos.remove({ _id: id });
     }
   } catch (error) {
     console.log(error);
+  } finally {
+    res.redirect(routes.home);
   }
-  res.redirect(routes.home);
 };
 
 export const postRegisterView = async (req, res) => {
@@ -133,7 +141,8 @@ export const postAddComment = async (req, res) => {
     const video = await Video.findById(id);
     const newComment = await Comment.create({
       text: comment,
-      creator: user.id
+      creator: user.id,
+      videos: video.id
     });
     video.comments.push(newComment.id);
     video.save();
