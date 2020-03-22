@@ -96,15 +96,19 @@ export const deleteVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id).populate("comments");
-    const comments = await Comment.findOne({ videos: id });
     const userId = req.user._id;
-    // const user = await User.findById(userId).populate("videos");
+    const user = await User.findById(userId).populate("videos");
+    const userVideoArr = user.videos;
+    const tmpVideoArr = userVideoArr.filter(arr => {
+      return arr._id !== id;
+    });
+    console.log(id, tmpVideoArr);
     if (String(video.creator) !== String(userId)) {
       throw Error();
     } else {
       await Video.findOneAndRemove({ _id: id });
-      // remove all the comments
-      await Comment.findByIdAndRemove(comments.id);
+      await Comment.deleteMany({ videos: id });
+      await User.findOneAndUpdate({ _id: userId }, { videos: tmpVideoArr });
       // remove video field data of User
       // await user.videos.remove({ _id: id });
     }
