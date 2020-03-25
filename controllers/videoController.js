@@ -34,10 +34,10 @@ export const getUpload = (req, res) =>
 export const postUpload = async (req, res) => {
   const {
     body: { title, description },
-    file: { path }
+    file: { location }
   } = req;
   const newVideo = await Video.create({
-    fileUrl: path,
+    fileUrl: location,
     title,
     description,
     creator: req.user.id
@@ -153,3 +153,7 @@ export const postAddComment = async (req, res) => {
     res.end();
   }
 };
+
+// export const postDeleteComment = (req, res) => {
+//   console.log(req);
+// };
