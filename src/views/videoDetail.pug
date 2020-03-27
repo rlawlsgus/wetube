@@ -34,4 +34,5 @@ block content
                 each comment in video.comments.reverse()
                     li
                         span=comment.text
-                        
+                        div(id="jsDeleteComment" class=`${comment.id}`)
+                            button ❌

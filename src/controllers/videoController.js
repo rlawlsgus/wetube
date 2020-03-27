@@ -105,7 +105,7 @@ export const deleteVideo = async (req, res) => {
     if (String(video.creator) !== String(userId)) {
       throw Error();
     } else {
-      await User.findOneAndUpdate({ _id: userId }, { videos: tmpVideoArr });
+      await User.findByIdAndUpdate(userId, { videos: tmpVideoArr });
       await Video.findOneAndRemove({ _id: id });
       await Comment.deleteMany({ videos: id });
     }
@@ -154,6 +154,27 @@ export const postAddComment = async (req, res) => {
   }
 };
 
-// export const postDeleteComment = (req, res) => {
-//   console.log(req);
-// };
+export const postDeleteComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { comment }
+  } = req;
+  try {
+    const video = await Video.findById(id).populate("comments");
+    const commentDb = await Comment.findById(comment);
+    const userId = req.user._id;
+    const tmpCommentArr = await video.comments.filter(arr => {
+      return arr.id !== id;
+    });
+    if (String(commentDb.creator) !== String(userId)) {
+      throw Error();
+    } else {
+      await Video.findByIdAndUpdate(id, { comments: tmpCommentArr });
+      await Comment.findByIdAndRemove(comment);
+    }
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
