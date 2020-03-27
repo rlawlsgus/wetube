@@ -13,7 +13,7 @@ passport.use(User.createStrategy());
 let callback;
 
 if (process.env.PRODUCTION) {
-  callback = "https://mysterious-journey-76674.herokuapp.com";
+  callback = "https://sleepy-spire-74706.herokuapp.com";
 } else {
   callback = "http://localhost:4000";
 }
