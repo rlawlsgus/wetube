@@ -8,11 +8,17 @@ const increaseNumber = () => {
   commentNumber.innerHTML = parseInt(commentNumber.innerHTML, 10) + 1;
 };
 
-const addComment = comment => {
+const addComment = async (comment, commentId) => {
   const li = document.createElement("li");
   const span = document.createElement("span");
+  const button = document.createElement("button");
   span.innerHTML = comment;
+  button.innerHTML = "❌";
+  li.id = `li${commentId}`;
+  button.className = "jsDeleteComment";
+  button.id = commentId;
   li.appendChild(span);
+  li.appendChild(button);
   commentList.prepend(li);
   increaseNumber();
 };
@@ -27,7 +33,10 @@ const sendComment = async comment => {
     }
   });
   if (response.status === 200) {
-    addComment(comment);
+    console.log(response);
+    const { commentId } = response.data;
+    console.log(commentId);
+    addComment(comment, commentId);
   }
 };
 

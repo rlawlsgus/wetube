@@ -57,6 +57,10 @@
         &:not(:last-child) {
           margin-bottom: 15px;
         }
+        span {
+          font-size: large;
+          margin-bottom: 5px;
+        }
       }
     }
   }

@@ -1,13 +1,22 @@
+/* eslint-disable no-plusplus */
 import axios from "axios";
 
-const deleteBtn = document.getElementById("jsDeleteComment");
+const deleteBtn = document.querySelectorAll(".jsDeleteComment");
+const commentNumber = document.getElementById("jsCommentNumber");
 
-const deleteComment = comment => {
-  console.log(comment);
+const decreaseNumber = () => {
+  commentNumber.innerHTML = parseInt(commentNumber.innerHTML, 10) - 1;
 };
 
-const handleDeleteComment = async () => {
-  const comment = deleteBtn.className;
+const deleteComment = comment => {
+  const commentList = document.getElementById(`li${comment}`);
+  commentList.innerHTML = "";
+  commentList.parentNode.removeChild(commentList);
+  decreaseNumber();
+};
+
+const handleDeleteComment = async event => {
+  const comment = event.target.id;
   const videoId = window.location.href.split("/videos/")[1];
   const response = await axios({
     url: `/api/${videoId}/comment/delete`,
@@ -22,7 +31,12 @@ const handleDeleteComment = async () => {
 };
 
 const init = () => {
-  deleteBtn.addEventListener("click", handleDeleteComment);
+  deleteBtn.forEach(each => {
+    const btn = each;
+    btn.addEventListener("click", handleDeleteComment);
+  });
 };
 
-init();
+if (deleteBtn) {
+  init();
+}

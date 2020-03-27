@@ -147,6 +147,7 @@ export const postAddComment = async (req, res) => {
     });
     video.comments.push(newComment.id);
     video.save();
+    res.json({ commentId: newComment.id });
   } catch (error) {
     res.status(400);
   } finally {
@@ -164,7 +165,7 @@ export const postDeleteComment = async (req, res) => {
     const commentDb = await Comment.findById(comment);
     const userId = req.user._id;
     const tmpCommentArr = await video.comments.filter(arr => {
-      return arr.id !== id;
+      return arr.id !== comment;
     });
     if (String(commentDb.creator) !== String(userId)) {
       throw Error();
