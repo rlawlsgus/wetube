@@ -39,10 +39,7 @@ export const postLogin = passport.authenticate("local", {
   failureFlash: "Can't log in. Check EMAIL and/or PASSWORD"
 });
 
-export const githubLogin = passport.authenticate("github", {
-  successFlash: "Welcome",
-  failureFlash: "Can't log in. Check github ID and/or PASSWORD"
-});
+export const githubLogin = passport.authenticate("github");
 
 export const githubLoginCallback = async (_, __, profile, cb) => {
   const {
@@ -74,9 +71,7 @@ export const postGithubLogin = (req, res) => {
 };
 
 export const googleLogin = passport.authenticate("google", {
-  scope: ["email", "profile"],
-  successFlash: "Welcome",
-  failureFlash: "Can't log in. Check google ID and/or PASSWORD"
+  scope: ["email", "profile"]
 });
 
 export const googleLoginCallback = async (_, __, profile, cb) => {

@@ -32,14 +32,22 @@ globalRouter.get(routes.logout, onlyPrivate, logout);
 globalRouter.get(routes.gitHub, githubLogin);
 globalRouter.get(
   routes.githubCallback,
-  passport.authenticate("github", { failureRedirect: "/login" }),
+  passport.authenticate("github", {
+    failureRedirect: "/login",
+    successFlash: "Welcome",
+    failureFlash: "Can't log in. Check github ID and/or PASSWORD"
+  }),
   postGithubLogin
 );
 
 globalRouter.get(routes.google, googleLogin);
 globalRouter.get(
   routes.googleCallback,
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    successFlash: "Welcome",
+    failureFlash: "Can't log in. Check google ID and/or PASSWORD"
+  }),
   postGoogleLogin
 );
 

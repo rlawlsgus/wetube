@@ -1,3 +1,4 @@
+/* eslint-disable use-isnan */
 /* eslint-disable no-use-before-define */
 import getBlobDuration from "get-blob-duration";
 
@@ -91,7 +92,7 @@ async function setTotalTime() {
   let totalTimeString = formatDate(videoPlayer.duration);
   totalTime.innerHTML = totalTimeString;
   setInterval(getCurrentTime, 1000);
-  if (!totalTimeString) {
+  if (totalTimeString === NaN) {
     const blob = await fetch(videoPlayer.src).then(response => response.blob());
     const duration = await getBlobDuration(blob);
     totalTimeString = formatDate(duration);
@@ -125,7 +126,7 @@ function init() {
   playBtn.addEventListener("click", handlePlayClick);
   volumeBtn.addEventListener("click", handleVolumeClick);
   fullScreenBtn.addEventListener("click", goFullScreen);
-  videoPlayer.addEventListener("loadedmetadata", setTotalTime);
+  videoPlayer.addEventListener("loadedmetadata", setTotalTime());
   videoPlayer.addEventListener("ended", handleEnded);
   volumeRange.addEventListener("input", handleDrag);
 }
